@@ -115,63 +115,9 @@ public:
 		return (right - left);
 	}
 	
-	int balanceFactor(const T& key)
-	{
-		int left = 0;
-		int right = 0;
-		Node* node = find(key);
-		
-		for (auto& it : mStack) {
-			it.second = false;
-		}
-		if (node->left) {
-			backtrack(node->left, left);
-		}
-		if (node->right) {
-			backtrack(node->right, right);
-		}
-		
-		return (right - left);
-	}
-	
 	bool exist(const T& key)
 	{
 		return (find(key));
-	}
-	
-	T min()
-	{
-		T result = mStack.begin()->first;
-		
-		for (auto& it : mStack) {
-			if (result > it.first) {
-				result = it.first;
-			}
-		}
-		return result;
-	}
-	
-	T max()
-	{
-		T result = mStack.begin()->first;
-		
-		for (auto& it : mStack) {
-			if (result < it.first) {
-				result = it.first;
-			}
-		}
-		return result;
-	}
-	
-	float average()
-	{
-		float result = 0;
-		float div = (float) mStack.size();
-		
-		for (auto& it : mStack) {
-			result += it.first;
-		}
-		return (div != 0.0f ? result / div : 0.0f);
 	}
 	
 	void print()
@@ -216,6 +162,7 @@ private:
 		}
 		return true;
 	}
+	
 	void backtrack(Node* node, int& result)
 	{
 		int count = 0;
@@ -236,15 +183,72 @@ private:
 				it = it->base;
 				count--;
 			}
-			if (it == node && (it->left && it->left->visited) && (it->right && it->right->visited)) {
+			if (!it) {
+				break;
+			} else if (it == node && (it->left && it->left->visited) && (it->right && it->right->visited)) {
 				break;
 			}
 			result = result < count ? count : result;
 		}
 	}
+	
 	Node* find(const T& key)
 	{
 		return mStack[key];
+	}
+	
+	int balanceFactor(const T& key)
+	{
+		int left = 0;
+		int right = 0;
+		Node* node = find(key);
+		
+		for (auto& it : mStack) {
+			it.second->visited = false;
+		}
+		if (node->left) {
+			backtrack(node->left, left);
+		}
+		if (node->right) {
+			backtrack(node->right, right);
+		}
+		
+		return (right - left);
+	}
+	
+	T min()
+	{
+		T result = mStack.begin()->first;
+		
+		for (auto& it : mStack) {
+			if (result > it.first) {
+				result = it.first;
+			}
+		}
+		return result;
+	}
+	
+	T max()
+	{
+		T result = mStack.begin()->first;
+		
+		for (auto& it : mStack) {
+			if (result < it.first) {
+				result = it.first;
+			}
+		}
+		return result;
+	}
+	
+	double average()
+	{
+		double result = .0;
+		double div = (double) mStack.size();
+		
+		for (auto& it : mStack) {
+			result += (double) it.first;
+		}
+		return (div != .0 ? result / div : .0);
 	}
 };
 

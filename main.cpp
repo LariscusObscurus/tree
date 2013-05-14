@@ -29,5 +29,6 @@ int main(int argc, char** argv)
 		cerr << "couldn't create tree" << endl;
 		_exit(EXIT_FAILURE);
 	}
+	tree.print();
 	return EXIT_SUCCESS;
 }
