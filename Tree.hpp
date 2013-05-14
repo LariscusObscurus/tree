@@ -57,11 +57,16 @@ public:
 				mStack[key] = mNodes;
 				return true;
 			} catch (...) {
+				using namespace std;
+				cerr << "Exception" << endl;
+				cerr << "\tFile: " << __FILE__ << endl;
+				cerr << "\tLine: " << __LINE__ << endl;
+				cerr << "\tDate: " << __DATE__ << " " << __TIME__ << endl;
 				return false;
 			}
 		}
 		
-		for (Node* it = mNodes; it;) {
+		for (Node* it = mNodes;;) {
 			if (it && key < it->key) {
 				if (it->left) {
 					it = it->left;
@@ -104,7 +109,7 @@ public:
 		int right = 0;
 		
 		for (auto& it : mStack) {
-			it.second = false;
+			it.second->visited = false;
 		}
 		if (mNodes->left) {
 			backtrack(mNodes->left, left);
@@ -139,14 +144,20 @@ public:
 		cout << "min: " << min() << ", max: " << max() << ", avg: " << average() << endl;
 	}
 private:
-	bool insert(const T& key, Node* node)
+	bool insert(const T& key, Node*& node)
 	{
 		if (key < node->key) {
 			try {
 				node->left = new Node();
 				node->left->key = key;
 				node->left->base = node;
+				node = node->left;
 			} catch (...) {
+				using namespace std;
+				cerr << "Exception" << endl;
+				cerr << "\tFile: " << __FILE__ << endl;
+				cerr << "\tLine: " << __LINE__ << endl;
+				cerr << "\tDate: " << __DATE__ << " " << __TIME__ << endl;
 				return false;
 			}
 		} else if (key > node->key) {
@@ -154,7 +165,13 @@ private:
 				node->right = new Node();
 				node->right->key = key;
 				node->right->base = node;
+				node = node->right;
 			} catch (...) {
+				using namespace std;
+				cerr << "Exception" << endl;
+				cerr << "\tFile: " << __FILE__ << endl;
+				cerr << "\tLine: " << __LINE__ << endl;
+				cerr << "\tDate: " << __DATE__ << " " << __TIME__ << endl;
 				return false;
 			}
 		} else {
@@ -183,12 +200,14 @@ private:
 				it = it->base;
 				count--;
 			}
-			if (!it) {
+			
+			result = result < count ? count : result;
+			
+			if (!it || count < 0) {
 				break;
 			} else if (it == node && (it->left && it->left->visited) && (it->right && it->right->visited)) {
 				break;
 			}
-			result = result < count ? count : result;
 		}
 	}
 	
