@@ -182,11 +182,12 @@ private:
 	
 	void backtrack(Node* node, int& result)
 	{
-		int count = 0;
+		int count = 1;
 		Node* it = node;
+		it->visited = true;
 		
 		while (true) {
-			it->visited = true;
+			result = result < count ? count : result;
 			
 			if (it->left && !it->left->visited) {
 				it = it->left;
@@ -201,11 +202,10 @@ private:
 				count--;
 			}
 			
-			result = result < count ? count : result;
 			
-			if (!it || count < 0) {
+			if (!it || count <= 0) {
 				break;
-			} else if (it == node && (it->left && it->left->visited) && (it->right && it->right->visited)) {
+			} else if (it == node && ((it->left && it->left->visited) || !it->left) && ((it->right && it->right->visited) || !it->right)) {
 				break;
 			}
 		}
